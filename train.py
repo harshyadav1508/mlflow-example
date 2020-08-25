@@ -8,7 +8,7 @@ import sys
 
 import pandas as pd
 import numpy as np
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score,roc_auc_score,roc_curve,scorer,accuracy_score,f1_sscore
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import ElasticNet
 
@@ -17,17 +17,24 @@ import mlflow.sklearn
 
 
 def eval_metrics(actual, pred):
+    """
     rmse = np.sqrt(mean_squared_error(actual, pred))
     mae = mean_absolute_error(actual, pred)
     r2 = r2_score(actual, pred)
     return rmse, mae, r2
+    """
+    model_accuracy = accuracy_score(actual, pred)
+    model_roc_auc = roc_auc_score(actual, pred)    
+    model_f1_score = f1_score(actual, pred) 
+    return model_accuracy,model_roc_auc,model_f1_score
+    
 
 
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     np.random.seed(40)
-
+    mlflow.set_experiment("/test_mlflow/3churnPrediction")
     # Read the wine-quality csv file (make sure you're running this from the root of MLflow!)
     wine_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "wine-quality.csv")
     data = pd.read_csv(wine_path)
@@ -44,14 +51,14 @@ if __name__ == "__main__":
     alpha = float(sys.argv[1]) if len(sys.argv) > 1 else 0.5
     l1_ratio = float(sys.argv[2]) if len(sys.argv) > 2 else 0.5
 
-    with mlflow.start_run():
+    with mlflow.start_run(run_name="from_git"):
         lr = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=42)
         lr.fit(train_x, train_y)
 
         predicted_qualities = lr.predict(test_x)
-
+        """
         (rmse, mae, r2) = eval_metrics(test_y, predicted_qualities)
-
+             
         print("Elasticnet model (alpha=%f, l1_ratio=%f):" % (alpha, l1_ratio))
         print("  RMSE: %s" % rmse)
         print("  MAE: %s" % mae)
@@ -62,5 +69,10 @@ if __name__ == "__main__":
         mlflow.log_metric("rmse", rmse)
         mlflow.log_metric("r2", r2)
         mlflow.log_metric("mae", mae)
-
+        """
+        (model_accuracy,model_roc_auc,model_f1_score) = eval_metrics(test_y, predicted_qualities)
+        mlflow.log_metric("AUC", model_roc_auc)
+        mlflow.log_metric("Accuracy", model_accuracy)
+        mlflow.log_metric("F1", model_f1_score)
+        
         mlflow.sklearn.log_model(lr, "model")
