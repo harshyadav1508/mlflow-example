@@ -29,7 +29,7 @@ def eval_metrics(actual, pred):
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     np.random.seed(40)
-    #mlflow.set_experiment("/test_mlflow/3churnPrediction")
+    mlflow.set_experiment("/test_mlflow/3churnPrediction")
     # Read the wine-quality csv file (make sure you're running this from the root of MLflow!)
     wine_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "wine-quality.csv")
     data = pd.read_csv(wine_path)
@@ -54,16 +54,16 @@ if __name__ == "__main__":
         
         (rmse, mae, r2) = eval_metrics(test_y, predicted_qualities)
              
-        print("Elasticnet model (alpha=%f, l1_ratio=%f):" % (alpha, l1_ratio))
-        print("  RMSE: %s" % rmse)
-        print("  MAE: %s" % mae)
-        print("  R2: %s" % r2)
+        #print("Elasticnet model (alpha=%f, l1_ratio=%f):" % (alpha, l1_ratio))
+        print("  AUC: %s" % rmse)
+        print(" Accuracy: %s" % mae)
+        print("  F1: %s" % r2)
 
         mlflow.log_param("alpha", alpha)
         mlflow.log_param("l1_ratio", l1_ratio)
-        mlflow.log_metric("rmse", rmse)
-        mlflow.log_metric("r2", r2)
-        mlflow.log_metric("mae", mae)
+        mlflow.log_metric("AUC", rmse)
+        mlflow.log_metric("Accuracy", r2)
+        mlflow.log_metric("F1", mae)
         """
         (model_accuracy,model_roc_auc,model_f1_score) = eval_metrics(test_y, predicted_qualities)
         mlflow.log_metric("AUC", model_roc_auc)
