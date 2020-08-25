@@ -34,7 +34,7 @@ def eval_metrics(actual, pred):
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     np.random.seed(40)
-    mlflow.set_experiment("/test_mlflow/3churnPrediction")
+    #mlflow.set_experiment("/test_mlflow/3churnPrediction")
     # Read the wine-quality csv file (make sure you're running this from the root of MLflow!)
     wine_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "wine-quality.csv")
     data = pd.read_csv(wine_path)
