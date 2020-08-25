@@ -17,16 +17,11 @@ import mlflow.sklearn
 
 
 def eval_metrics(actual, pred):
-    """
     rmse = np.sqrt(mean_squared_error(actual, pred))
     mae = mean_absolute_error(actual, pred)
     r2 = r2_score(actual, pred)
     return rmse, mae, r2
-    """
-    model_accuracy = accuracy_score(actual, pred)
-    model_roc_auc = roc_auc_score(actual, pred)    
-    model_f1_score = f1_score(actual, pred) 
-    return model_accuracy,model_roc_auc,model_f1_score
+
     
 
 
@@ -56,7 +51,7 @@ if __name__ == "__main__":
         lr.fit(train_x, train_y)
 
         predicted_qualities = lr.predict(test_x)
-        """
+        
         (rmse, mae, r2) = eval_metrics(test_y, predicted_qualities)
              
         print("Elasticnet model (alpha=%f, l1_ratio=%f):" % (alpha, l1_ratio))
@@ -74,5 +69,5 @@ if __name__ == "__main__":
         mlflow.log_metric("AUC", model_roc_auc)
         mlflow.log_metric("Accuracy", model_accuracy)
         mlflow.log_metric("F1", model_f1_score)
-        
+        """
         mlflow.sklearn.log_model(lr, "model")
