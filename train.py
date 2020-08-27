@@ -59,8 +59,8 @@ if __name__ == "__main__":
         print(" Accuracy: %s" % mae)
         print("  F1: %s" % r2)
 
-        mlflow.log_param("alpha", alpha)
-        mlflow.log_param("l1_ratio", l1_ratio)
+        #mlflow.log_param("alpha", alpha)
+        #mlflow.log_param("l1_ratio", l1_ratio)
         mlflow.log_metric("AUC", rmse)
         mlflow.log_metric("Accuracy", r2)
         mlflow.log_metric("F1", mae)
